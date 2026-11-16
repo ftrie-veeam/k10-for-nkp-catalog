@@ -38,3 +38,13 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: ${releaseName}-${appVersion}-config-defaults
+    # Workspace-Konfiguration aus der NKP-UI (falls vorhanden)
+    - kind: ConfigMap
+      name: ${releaseName}-config-overrides
+      valuesKey: values.yaml
+      optional: true
+    # Cluster-Konfiguration aus der NKP-UI (falls vorhanden)
+    - kind: ConfigMap
+      name: ${releaseName}-cluster-overrides
+      valuesKey: values.yaml
+      optional: true

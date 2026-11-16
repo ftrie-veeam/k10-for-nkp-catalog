@@ -15,7 +15,7 @@ applications/kasten/9.0.11/
     ├── kustomization.yaml
     ├── cm.yaml            # Default-Values
     └── kasten.yaml        # HelmRepository + HelmRelease
-.release/release.yaml      # Release-Spec für Tag 2.19
+release/release.yaml      # Release-Spec für Tag 2.19
 ```
 
 ## Veröffentlichen (macOS/Linux, nkp CLI 2.19)
@@ -24,7 +24,7 @@ applications/kasten/9.0.11/
 nkp validate catalog-repository --repo-dir .
 echo "$GHCR_TOKEN" | docker login ghcr.io -u ftrie-veeam --password-stdin
 nkp experimental catalog release \
-  --release-spec .release/release.yaml \
+  --release-spec release/release.yaml \
   --repo-dir . \
   --push-to-registry ghcr.io/ftrie-veeam
 ```

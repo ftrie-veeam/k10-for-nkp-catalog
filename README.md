@@ -1,34 +1,47 @@
 # NKP-Katalog: Veeam Kasten for Kubernetes
 
-Custom Catalog für NKP Kommander mit dem Kasten-Helm-Chart `k10`.
+Catalog-Collection für NKP 2.18+ (getestet gegen das Format von NKP 2.19)
+mit dem Kasten-Helm-Chart `k10` 9.0.11. Kasten wird im Namespace
+`kasten-io` installiert.
+
+## Aufbau
+
+```
+applications/kasten/9.0.11/
+├── metadata.yaml          # Kachel: Name, Beschreibung, Icon
+├── kustomization.yaml
+├── helmrelease.yaml       # Flux-Kustomization auf ./helmrelease
+└── helmrelease/
+    ├── kustomization.yaml
+    ├── cm.yaml            # Default-Values
+    └── kasten.yaml        # HelmRepository + HelmRelease
+.release/release.yaml      # Release-Spec für Tag 2.19
+```
+
+## Veröffentlichen (macOS/Linux, nkp CLI 2.19)
+
+```bash
+nkp validate catalog-repository --repo-dir .
+echo "$GHCR_TOKEN" | docker login ghcr.io -u ftrie-veeam --password-stdin
+nkp experimental catalog release \
+  --release-spec .release/release.yaml \
+  --repo-dir . \
+  --push-to-registry ghcr.io/ftrie-veeam
+```
+
+Danach die neuen Packages auf GitHub auf **Public** stellen
+(Profil > Packages > Package settings > Change visibility).
 
 ## Einbinden
 
-1. Repo nach GitHub/GitLab pushen (muss vom Management-Cluster erreichbar sein).
-2. Als Katalog im Workspace registrieren:
-
-   ```bash
-   nkp create catalog kasten-catalog \
-     -w <workspace-name> \
-     --branch main \
-     --url https://github.com/<org>/<repo>
-   ```
-
-3. Prüfen:
-
-   ```bash
-   kubectl get gitrepository -n <workspace-namespace>
-   kubectl get apps -n <workspace-namespace> | grep kasten
-   ```
-
-4. In der UI: Workspace > Applications > "Veeam Kasten for Kubernetes" > Enable.
+```bash
+nkp create catalog-collection \
+  --url oci://ghcr.io/ftrie-veeam/k10-for-nkp-catalog/collection \
+  --tag 2.19 \
+  --workspace dev-ws
+```
 
 ## Neue Kasten-Version
 
-Verzeichnis `services/kasten/9.0.11` kopieren, nach der neuen Chart-Version
-benennen und `version:` in `kasten.yaml` anpassen. Verfügbare Versionen:
-
-```bash
-helm repo add kasten https://charts.kasten.io/
-helm search repo kasten/k10 --versions | head
-```
+`applications/kasten/9.0.11` kopieren, nach der neuen Version benennen,
+`version:` in `helmrelease/kasten.yaml` anpassen und neu veröffentlichen.

@@ -2,12 +2,6 @@
 
 Custom Catalog für NKP Kommander mit dem Kasten-Helm-Chart `k10`.
 
-## Icon
-
-Das Logo stammt aus dem SUSE Rancher Partner-Catalog (`rancher/partner-charts`,
-`assets/icons/k10.png`) und ist bereits Base64-kodiert in
-`services/kasten/metadata.yaml` eingetragen.
-
 ## Einbinden
 
 1. Repo nach GitHub/GitLab pushen (muss vom Management-Cluster erreichbar sein).
